@@ -73,7 +73,7 @@ public class Helpers {
         for(int row = 0; row < board.length; row++) {
 
             // Dividers
-            for(int i = 0; i < 33; i++) {
+            for(int i = 0; i < board[0].length * 4 + 4; i++) {
                 System.out.print("-");
             }
             System.out.println();
@@ -93,7 +93,7 @@ public class Helpers {
         }
 
         // Final Divider
-        for(int i = 0; i < 33; i++) {
+        for(int i = 0; i < board[0].length * 4 + 4; i++) {
             System.out.print("-");
         }
         System.out.println();

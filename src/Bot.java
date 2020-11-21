@@ -1,8 +1,23 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Bot {
     boolean isYellow = true;
+    Random rand = new Random();
+    final int maxDepth = 5;
+    int largestHeight;
+    int moveDepth = -1;
+
+    class Move {
+        int depth;
+        int col;
+        Move(int col, int depth) {
+            this.depth = depth;
+            this.col = col;
+        }
+    }
 
     Bot() {
         isYellow = true;
@@ -14,41 +29,87 @@ public class Bot {
 
     public int playPiece(Piece[][] origBoard) {
         Piece[][] board = copyBoard(origBoard);
+        largestHeight = 0;
+        Instant start = Instant.now();
+        Move move = playTree(board, maxDepth);
+        Instant end = Instant.now();
+
+        if(move.col == -1) {
+            System.out.println("Choosing randomly");
+            return rand.nextInt(board[0].length) + 1;
+        }
+        System.out.println();
+        System.out.println("Move was from depth: " + (maxDepth - move.depth));
+        System.out.println("Column: " + move.col);
+        System.out.println("Time Spent Calculating: " + Duration.between(start, end));
+        System.out.println("Deepest Path: " + largestHeight);
+        return move.col;
+    }
+
+    private Move playTree(Piece[][] origBoard, int depth) {
+        if(largestHeight < maxDepth - depth)
+            largestHeight = maxDepth - depth;
+
+        if(depth == 0 ){//|| depth <= moveDepth) {
+            return new Move(-1, depth);
+        }
+
+        Piece[][] board = copyBoard(origBoard);
         int col;
 
-        // Check for an immdediate win
+        // Check for an immediate win
         col = immediateWin(origBoard, isYellow);
         if(col > 0) {
-            return col;
+            //System.out.println("Found win at depth: " + depth + " with col: " + col);
+            return new Move(col, depth);
         }
 
         // Check to stop a win
         col = immediateWin(origBoard, !isYellow);
         if(col > 0) {
-            return col;
+            return new Move(col, depth);
         }
-
 
         // Play a random spot that does not cause an immediate loss
-        Random rand = new Random();
-        ArrayList<Integer> columns = new ArrayList<>();
+        ArrayList<Integer> botColumns = new ArrayList<>();
+        ArrayList<Integer> playerColumns = new ArrayList<>();
         for(int i = 1; i <= board[0].length; i++) {
-            columns.add(i);
+            botColumns.add(i);
+            playerColumns.add(i);
         }
 
+        // Simulate each type of play
+        ArrayList<Move> moves = new ArrayList<>();
         Piece botPiece = new Piece(isYellow);
-        int playerCol;
-        while(!columns.isEmpty()) {
-            board = copyBoard(origBoard);
-            col = columns.remove(rand.nextInt(columns.size()));
-            addPiece(board, col, botPiece);
-            playerCol = immediateWin(board, !isYellow);
-            if(playerCol == -1) {
-                return col;
+        Piece playerPiece = new Piece(!isYellow);
+        Move move;
+        int botCol, playerCol;
+        while(!botColumns.isEmpty()) {
+            botCol = botColumns.remove(rand.nextInt(botColumns.size()));
+            while (!playerColumns.isEmpty()) {
+                board = copyBoard(origBoard);
+                playerCol = playerColumns.remove(rand.nextInt(playerColumns.size()));
+                addPiece(board, botCol, botPiece);
+                addPiece(board, playerCol, playerPiece);
+                move = playTree(board, depth - 1);
+                if(move.col != -1) {
+                    moveDepth = move.depth;
+                    move.col = botCol;
+                    moves.add(move);
+                }
             }
         }
 
-        return rand.nextInt(board[0].length);
+
+        if(moves.isEmpty()) {
+            return new Move(-1, depth);
+        }
+        Move greatestDepth = new Move(-1, -1);
+        for(Move curr : moves) {
+            if(curr.depth > greatestDepth.depth && curr.col != -1)
+                greatestDepth = curr;
+        }
+        return greatestDepth;
     }
 
     private Piece[][] copyBoard(Piece[][] board) {

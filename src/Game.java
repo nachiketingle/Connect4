@@ -96,7 +96,7 @@ public class Game {
             else {
                 // Bot plays a piece
                 col = bot.playPiece(board);
-                System.out.print(col);
+                System.out.println(col);
             }
 
             PieceState state = addPiece(col);
@@ -124,7 +124,6 @@ public class Game {
         String piece;
 
         while (true) {
-            Thread.sleep(50);
             piece = turn ? "YELLOW" : "RED";
 
             System.out.print(piece + " player, pick a column: ");
