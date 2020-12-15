@@ -1,11 +1,16 @@
-import java.io.IOException;
+package BaseGame;
+
+import MinmaxBot.Bot;
+
 import java.util.Scanner;
 
 public class Main {
 
+    static Scanner scanner;
+
     public static void main(String[] args) throws InterruptedException {
         Game game = new Game();
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
         boolean chosen = false;
         int players;
         while (!chosen) {
@@ -18,7 +23,7 @@ public class Main {
                 chosen = false;
                 continue;
             }
-            scanner.close();
+
             switch (players) {
                 case 0:
                     twoBots(game);
@@ -32,17 +37,16 @@ public class Main {
                 default:
                     System.out.println("Please put one of the three choices");
                     chosen = false;
-                    scanner = new Scanner(System.in);
             }
         }
-
+        scanner.close();
     }
 
     public static void oneBot(Game game) {
-        game.run(new Bot());
+        game.run(new Bot(true));
     }
 
     public static void twoBots(Game game) throws InterruptedException {
-        game.run(new Bot(false), new Bot(true));
+        game.run(new Bot(true), new Bot(false));
     }
 }

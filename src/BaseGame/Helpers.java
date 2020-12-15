@@ -1,3 +1,5 @@
+package BaseGame;
+
 public class Helpers {
 
     public static boolean checkWinner(Piece[][] board, int row, int col) {
@@ -32,10 +34,7 @@ public class Helpers {
         count = checkDirection(board, row, col, 1, 1);
         // South West
         count += checkDirection(board, row, col, -1, -1) - 1;
-        if(count >= 4)
-            return true;
-
-        return false;
+        return count >= 4;
     }
 
     private static int checkDirection(Piece[][] board, int row, int col, int rowDir, int colDir) {

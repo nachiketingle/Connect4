@@ -1,11 +1,14 @@
-import java.io.IOException;
+package BaseGame;
+
+import MinmaxBot.Bot;
+
 import java.util.Scanner;
 
 public class Game {
 
     Piece[][] board;  // null=Empty Space
     boolean turn;   // True = Yellow, False = Red
-
+    Scanner scanner;
 
     enum PieceState {
         SUCCESS,
@@ -64,8 +67,8 @@ public class Game {
 
     public void run(Bot bot) {
         Helpers.printBoard(board);
+        scanner = Main.scanner;
 
-        Scanner scanner = new Scanner(System.in);
         String input;
         int col;
         String piece;
@@ -76,7 +79,7 @@ public class Game {
             System.out.print(piece + " player, pick a column: ");
 
             // User plays a piece
-            if(!turn) {
+            if(turn != bot.isYellow) {
                 input = scanner.nextLine();
 
                 // Check if input is exit
@@ -115,7 +118,7 @@ public class Game {
         }
     }
 
-    public void run(Bot yellowBot, Bot redBot) throws InterruptedException {
+    public void run(Bot yellowBot, Bot redBot) {
         Helpers.printBoard(board);
 
         Scanner scanner = new Scanner(System.in);
