@@ -1,5 +1,6 @@
 package MinmaxBot;
 
+import BaseGame.Bot;
 import BaseGame.Helpers;
 import BaseGame.Piece;
 
@@ -8,8 +9,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Bot {
-    public boolean isYellow;
+public class MMBot extends Bot{
     Random rand = new Random();
     static final int maxDepth = 8;
     int largestHeight, maxHeight;
@@ -23,11 +23,11 @@ public class Bot {
         }
     }
 
-    public Bot() {
+    public MMBot() {
         isYellow = true;
     }
 
-    public Bot(boolean _isYellow) {
+    public MMBot(boolean _isYellow) {
         this.isYellow = _isYellow;
     }
 

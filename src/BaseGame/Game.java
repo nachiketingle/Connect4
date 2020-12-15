@@ -1,6 +1,6 @@
 package BaseGame;
 
-import MinmaxBot.Bot;
+import MinmaxBot.MMBot;
 
 import java.util.Scanner;
 

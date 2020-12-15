@@ -1,6 +1,6 @@
 package BaseGame;
 
-import MinmaxBot.Bot;
+import MinmaxBot.MMBot;
 
 import java.util.Scanner;
 
@@ -8,7 +8,7 @@ public class Main {
 
     static Scanner scanner;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Game game = new Game();
         scanner = new Scanner(System.in);
         boolean chosen = false;
@@ -43,10 +43,10 @@ public class Main {
     }
 
     public static void oneBot(Game game) {
-        game.run(new Bot(true));
+        game.run(new MMBot(true));
     }
 
-    public static void twoBots(Game game) throws InterruptedException {
-        game.run(new Bot(true), new Bot(false));
+    public static void twoBots(Game game) {
+        game.run(new MMBot(true), new MMBot(false));
     }
 }
