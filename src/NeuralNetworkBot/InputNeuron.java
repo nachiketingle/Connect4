@@ -9,18 +9,19 @@ public class InputNeuron extends Neuron {
     int row;
     int col;
 
-    InputNeuron(int row, int col, Piece piece) {
-        this.row = row;
-        this.col = col;
-        layer = 0;
-        if(piece == null) {
-            value = 0;
-        }
-        else {
-            value = piece.isYellow ? 1 : 0.5;
-        }
-
+    public InputNeuron(int index) {
+        super(0, index);
         this.outgoingEdges = new ArrayList<Edge>();
+        this.incomingEdges = null;
+        this.value = 0.5;
     }
 
+    @Override
+    public double calculateValue() {
+        return value;
+    }
+
+    public void setValue(Piece[][] board, int row, int col) {
+
+    }
 }

@@ -1,6 +1,9 @@
 package BaseGame;
 
 import MinmaxBot.MMBot;
+import NeuralNetworkBot.InputNeuron;
+import NeuralNetworkBot.NNBot;
+import NeuralNetworkBot.Neuron;
 
 import java.util.Scanner;
 
@@ -9,6 +12,13 @@ public class Main {
     static Scanner scanner;
 
     public static void main(String[] args) {
+        //testNN();
+
+        runGame();
+
+    }
+
+    public static void runGame() {
         Game game = new Game();
         scanner = new Scanner(System.in);
         boolean chosen = false;
@@ -47,6 +57,12 @@ public class Main {
     }
 
     public static void twoBots(Game game) {
-        game.run(new MMBot(true), new MMBot(false));
+        //game.run(new MMBot(true), new MMBot(false));
+        game.run(new NNBot(true), new MMBot(false));
+    }
+
+    public static void testNN() {
+        NNBot bot = new NNBot(true);
+
     }
 }
