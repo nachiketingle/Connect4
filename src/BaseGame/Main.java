@@ -53,16 +53,42 @@ public class Main {
     }
 
     public static void oneBot(Game game) {
-        game.run(new MMBot(true));
+
+        //game.run(new MMBot(true));
+        game.run(new NNBot(true, "test.csv"));
     }
 
-    public static void twoBots(Game game) {
+    public static int twoBots(Game game) {
         //game.run(new MMBot(true), new MMBot(false));
-        game.run(new NNBot(true), new MMBot(false));
+        //return game.run(new NNBot(true, "test.csv"), new MMBot(false));
+        return game.run(new NNBot(true, "test.csv"), new MMBot(false));
     }
 
     public static void testNN() {
-        NNBot bot = new NNBot(true);
+        Game game;
+        int redWins = 0, yellowWins = 0, ties = 0, totalGames = 0;
+        int result;
+        for(int i = 0; i < 50; i++) {
+            game = new Game();
+            result = twoBots(game);
+            switch (result) {
+                case 1:
+                    yellowWins++;
+                    break;
+                case -1:
+                    redWins++;
+                    break;
+                case 0:
+                    ties++;
+                    break;
+            }
+
+            totalGames++;
+        }
+
+        System.out.println("RED WINS: " + redWins + "\tYELLOW WINS: " + yellowWins);
+        System.out.println("TIES: " + ties);
+        System.out.println("TOTAL: " + totalGames);
 
     }
 }

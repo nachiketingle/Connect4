@@ -85,4 +85,6 @@ public abstract class Bot {
         return true;
     }
 
+    public void updateWin(boolean yellowWin) {}
+
 }

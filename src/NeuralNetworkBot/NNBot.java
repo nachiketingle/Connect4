@@ -15,11 +15,14 @@ public class NNBot extends Bot {
     InputNeuron[] inputNeurons;
     OutputNeuron[] outputNeurons;
     Neuron[][] allNeurons;
+    ArrayList<Node> moves;
+    String file;
 
-
-    public NNBot(boolean isYellow) {
+    public NNBot(boolean isYellow, String file) {
         this.isYellow = isYellow;
+        this.file = file;
         createNetwork();
+        moves = new ArrayList<>();
         //System.out.println(outputNeurons[0].calculateValue());
     }
 
@@ -28,12 +31,10 @@ public class NNBot extends Bot {
         System.out.println();
         System.out.println("NNBot Playing");
         Piece[][] board;
+
+
         // Set the values
-        for(int i = 0; i < origBoard.length; i++) {
-            for(int j = 0; j < origBoard[i].length; j++) {
-                inputNeurons[i * j + j].setValue(origBoard, i, j);
-            }
-        }
+        loadInputNeurons(origBoard, isYellow);
 
         // Calculate values
         double value, maxValue = Double.MIN_VALUE;
@@ -53,16 +54,45 @@ public class NNBot extends Bot {
             }
         }
 
+        moves.add(new Node(copyBoard(origBoard), column));
+
         System.out.println("Max Value: " + maxValue);
         System.out.println("Column: " + column);
 
         return column;
     }
 
+    @Override
+    public void updateWin(boolean yellowWin) {
+        System.out.println("Is Yellow: " + isYellow + "\t\tWin: " + (yellowWin == isYellow));
+        for(Node move : moves) {
+            // Set the values
+            loadInputNeurons(move.board, isYellow);
+
+            OutputNeuron n = outputNeurons[move.column - 1];
+            n.backpropogation((yellowWin == isYellow) ? 1 : 0);
+        }
+        try {
+            saveNetworkToFile(file);
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    private void loadInputNeurons(Piece[][] board, boolean isYellow) {
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                inputNeurons[i * j + j].setValue(board, i, j);
+            }
+        }
+
+        // The last neuron represents whose turn it is
+        inputNeurons[inputNeurons.length - 1].value = isYellow ? 1 : -1;
+    }
 
     private void createNetwork() {
         // Initialize arrays
-        inputNeurons = new InputNeuron[6 * 7];
+        inputNeurons = new InputNeuron[6 * 7 + 1];
         outputNeurons = new OutputNeuron[7];
         allNeurons = new Neuron[4][];
         allNeurons[0] = inputNeurons;
@@ -90,8 +120,8 @@ public class NNBot extends Bot {
         }
 
         try {
-            loadNetworkFromFile("testFile.csv");
-            saveNetworkToFile("testFile2.csv");
+            loadNetworkFromFile(file);
+            //saveNetworkToFile("testFile2.csv");
         } catch (Exception e) {
             System.out.println("An error occurred");
         }
@@ -187,9 +217,5 @@ public class NNBot extends Bot {
             csvWriter.flush();
         }
         csvWriter.close();
-    }
-
-    private void write(String test) {
-        System.out.println(test);
     }
 }

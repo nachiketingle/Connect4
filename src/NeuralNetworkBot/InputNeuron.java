@@ -21,7 +21,12 @@ public class InputNeuron extends Neuron {
         return value;
     }
 
-    public void setValue(Piece[][] board, int row, int col) {
+    @Override
+    public void backpropogation(double expected) {
 
+    }
+
+    public void setValue(Piece[][] board, int row, int col) {
+        value = board[row][col] == null ? 0 : board[row][col].val;
     }
 }

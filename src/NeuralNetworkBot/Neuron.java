@@ -3,6 +3,8 @@ package NeuralNetworkBot;
 import java.util.ArrayList;
 
 public class Neuron {
+    static final double learningRate = 0.1;
+
     int layer;                          // Layer Neuron is in
     int index;                          // Index of the layer that neuron is in
     double value;                       // Value of the neuron
@@ -27,6 +29,20 @@ public class Neuron {
 
     public String toEdgeString() {
         return layer + "-" + index;
+    }
+
+    public void backpropogation(double expected) {
+        Edge e;
+        double error = expected * derivative(value);
+        for(int i = 0; i < incomingEdges.size(); i++) {
+            e = incomingEdges.get(i);
+            e.weight = e.weight + learningRate * error * e.leftNeuron.value;
+            e.leftNeuron.backpropogation(error);
+        }
+    }
+
+    public static double derivative(double output) {
+        return output * (1 - output);
     }
 
 }

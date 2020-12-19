@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class MMBot extends Bot{
     Random rand = new Random();
-    static final int maxDepth = 8;
+    static final int maxDepth = 5;
     int largestHeight, maxHeight;
 
     class Move {
@@ -45,8 +45,8 @@ public class MMBot extends Bot{
         }
         System.out.println();
         System.out.println("Column: " + move.col);
-        System.out.println("Time Spent Calculating: " + Duration.between(start, end));
-        System.out.println("Deepest Path: " + largestHeight);
+        //System.out.println("Time Spent Calculating: " + Duration.between(start, end));
+        //System.out.println("Deepest Path: " + largestHeight);
         return move.col;
     }
 
@@ -92,14 +92,14 @@ public class MMBot extends Bot{
             Instant start = Instant.now();
             score = minMax(board, maxDepth, bestScore, !isYellow, boards);
             Instant end = Instant.now();
-            System.out.println("Score: " + score + "\tCol: " + col + "\tTime: " + Duration.between(start, end));
+            //System.out.println("Score: " + score + "\tCol: " + col + "\tTime: " + Duration.between(start, end));
             if(isYellow && bestScore < score) {
-                System.out.println("New Best for Yellow!");
+                //System.out.println("New Best for Yellow!");
                 bestScore = score;
                 bestMove = new Move(col, maxDepth);
             }
             else if(!isYellow && bestScore > score) {
-                System.out.println("New Best for Red!");
+                //System.out.println("New Best for Red!");
                 bestScore = score;
                 bestMove = new Move(col, maxDepth);
             }

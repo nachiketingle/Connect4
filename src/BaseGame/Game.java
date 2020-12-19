@@ -10,6 +10,8 @@ public class Game {
     boolean turn;   // True = Yellow, False = Red
     Scanner scanner;
 
+    final boolean fastMode = false;
+
     enum PieceState {
         SUCCESS,
         FILLED,
@@ -109,6 +111,7 @@ public class Game {
                     break;
                 case WINNER:
                     Helpers.printBoard(board);
+                    bot.updateWin(!turn);
                     System.out.println((turn ? "RED" : "YELLOW") + " is the Winner!!!");
                     return;
                 case OUT_OF_RANGE:
@@ -118,11 +121,9 @@ public class Game {
         }
     }
 
-    public void run(Bot yellowBot, Bot redBot) {
+    public int run(Bot yellowBot, Bot redBot) {
         Helpers.printBoard(board);
 
-        Scanner scanner = new Scanner(System.in);
-        String input;
         int col;
         String piece;
 
@@ -145,16 +146,19 @@ public class Game {
             PieceState state = addPiece(col);
             switch (state) {
                 case SUCCESS:
-                    Helpers.printBoard(board);
+                    if(!fastMode)
+                        Helpers.printBoard(board);
                     if(filledBoard()) {
                         System.out.println("Tied!!!");
-                        return;
+                        return 0;
                     }
                     break;
                 case WINNER:
                     Helpers.printBoard(board);
+                    yellowBot.updateWin(!turn);
+                    redBot.updateWin(!turn);
                     System.out.println((turn ? "RED" : "YELLOW") + " is the Winner!!!");
-                    return;
+                    return turn ? -1 : 1;
                 case OUT_OF_RANGE:
                 case FILLED:
                     System.out.println("Unable to add piece to column: " + col);
